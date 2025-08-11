@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Cari Data Training</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input {
+            padding: 5px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            width: 200px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .latest {
+            background-color: #ffefef;
+            color: red;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Cari Data Training</h2>
+<input type="text" id="searchInput" placeholder="Masukkan NIK atau sebagian" onkeyup="filterData()">
+
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>NIK</th>
+            <th>Nama</th>
+            <th>Judul Training</th>
+            <th>Tanggal Training</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data akan muncul di sini -->
+    </tbody>
+</table>
+
+<script>
+let allData = [];
+
+// Warna background untuk grup NIK
+const nikColors = ["#e3f2fd", "#e8f5e9", "#fff3e0", "#f3e5f5", "#fce4ec", "#e0f7fa", "#f9fbe7"];
+
+fetch("https://raw.githubusercontent.com/Milkywan/training-database/refs/heads/main/Database_Training.csv")
+    .then(response => response.text())
+    .then(csv => {
+        const lines = csv.split("\n").slice(1);
+        allData = lines.map(line => {
+            const cols = line.split(",");
+            return {
+                nik: cols[1]?.trim(),
+                nama: cols[2]?.trim(),
+                judul: cols[11]?.trim(),
+                tanggal: cols[10]?.trim()
+            };
+        }).filter(row => row.nik && row.tanggal); // Hapus row kosong
+    });
+
+function filterData() {
+    const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+    if (!keyword) {
+        document.querySelector("#dataTable tbody").innerHTML = "";
+        return;
+    }
+
+    let filtered = allData.filter(row => row.nik?.toLowerCase().includes(keyword));
+
+    // Urutkan berdasarkan tanggal terbaru
+    filtered.sort((a, b) => {
+        const [da, ma, ya] = a.tanggal.split("/").map(Number);
+        const [db, mb, yb] = b.tanggal.split("/").map(Number);
+        return new Date(yb, mb - 1, db) - new Date(ya, ma - 1, da);
+    });
+
+    // Cari training terbaru per NIK
+    let latestPerNIK = {};
+    filtered.forEach(row => {
+        if (!latestPerNIK[row.nik]) {
+            latestPerNIK[row.nik] = row.tanggal;
+        } else {
+            const [d1, m1, y1] = latestPerNIK[row.nik].split("/").map(Number);
+            const [d2, m2, y2] = row.tanggal.split("/").map(Number);
+            if (new Date(y2, m2 - 1, d2) > new Date(y1, m1 - 1, d1)) {
+                latestPerNIK[row.nik] = row.tanggal;
+            }
+        }
+    });
+
+    displayData(filtered, latestPerNIK);
+}
+
+function displayData(data, latestMap) {
+    const tbody = document.querySelector("#dataTable tbody");
+    tbody.innerHTML = "";
+
+    // Mapping warna ke setiap NIK
+    const nikList = [...new Set(data.map(item => item.nik))];
+    const nikColorMap = {};
+    nikList.forEach((nik, idx) => {
+        nikColorMap[nik] = nikColors[idx % nikColors.length];
+    });
+
+    data.forEach(item => {
+        const isLatest = item.tanggal === latestMap[item.nik];
+        const row = document.createElement("tr");
+        row.style.backgroundColor = nikColorMap[item.nik];
+        row.innerHTML = `
+            <td>${item.nik}</td>
+            <td>${item.nama}</td>
+            <td>${item.judul}</td>
+            <td>${isLatest ? `<span class="latest">${item.tanggal} 🔥 Terbaru</span>` : item.tanggal}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+</script>
+
+</body>
+</html>
