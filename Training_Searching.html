@@ -1,45 +1,126 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Cari Data Training</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        input {
-            padding: 5px;
-            font-size: 14px;
-            margin-bottom: 15px;
-            width: 200px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 10px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        .latest {
-            background-color: #ffefef;
-            color: red;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Cari Data Training</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    .top-bar {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 15px;
+        position: relative;
+    }
+    .traktir-btn {
+        background: #ff9800;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .coffee-icon {
+        font-size: 20px;
+        animation: bounce 1s infinite;
+        display: none;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    input {
+        padding: 5px;
+        font-size: 14px;
+        margin-right: 5px;
+        width: 200px;
+    }
+    button.scan-btn {
+        background: #2196f3;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 10px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    .latest {
+        background-color: #ffefef;
+        color: red;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+    }
+    .qr-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    .qr-grid img {
+        max-width: 100px;
+        height: auto;
+    }
+    .close-btn {
+        background: red;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin-top: 15px;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
 
+<div class="top-bar">
+    <button class="traktir-btn" onclick="openModal()">☕ Traktir Kopi</button>
+    <span class="coffee-icon" onclick="openModal()">☕</span>
+</div>
+
 <h2>Cari Data Training</h2>
-<input type="text" id="searchInput" placeholder="Masukkan NIK atau sebagian" onkeyup="filterData()">
+<input type="text" id="searchInput" placeholder="Masukkan NIK" onkeyup="filterData()">
+<button class="scan-btn" onclick="scanBarcode()">📷 Scan</button>
 
 <table id="dataTable">
     <thead>
@@ -50,76 +131,80 @@
             <th>Tanggal Training</th>
         </tr>
     </thead>
-    <tbody>
-        <!-- Data akan muncul di sini -->
-    </tbody>
+    <tbody></tbody>
 </table>
 
+<!-- Tombol bawah -->
+<div style="margin-top:20px;">
+    <button class="traktir-btn" onclick="openModal()">☕ Traktir Kopi</button>
+</div>
+
+<!-- Modal QR -->
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <h3>Traktir Kopi untuk IrwanS</h3>
+        <div class="qr-grid">
+            <div>
+                <img src="https://via.placeholder.com/100?text=GoPay" alt="GoPay">
+                <p>GoPay<br>08125331585</p>
+            </div>
+            <div>
+                <img src="https://via.placeholder.com/100?text=DANA" alt="DANA">
+                <p>DANA<br>08125331585</p>
+            </div>
+            <div>
+                <img src="https://via.placeholder.com/100?text=OVO" alt="OVO">
+                <p>OVO<br>08125331585</p>
+            </div>
+        </div>
+        <button class="close-btn" onclick="closeModal()">Tutup</button>
+    </div>
+</div>
+
+<p style="margin-top:30px; font-size:12px;">© 2025 by: IrwanS</p>
+
+<script src="https://unpkg.com/@zxing/library@latest"></script>
 <script>
 let allData = [];
-
-// Warna background untuk grup NIK
-const nikColors = ["#e3f2fd", "#e8f5e9", "#fff3e0", "#f3e5f5", "#fce4ec", "#e0f7fa", "#f9fbe7"];
+const nikColors = ["#e3f2fd","#e8f5e9","#fff3e0","#f3e5f5","#fce4ec","#e0f7fa","#f9fbe7"];
 
 fetch("https://raw.githubusercontent.com/Milkywan/training-database/refs/heads/main/Database_Training.csv")
-    .then(response => response.text())
+    .then(r => r.text())
     .then(csv => {
         const lines = csv.split("\n").slice(1);
         allData = lines.map(line => {
             const cols = line.split(",");
-            return {
-                nik: cols[1]?.trim(),
-                nama: cols[2]?.trim(),
-                judul: cols[11]?.trim(),
-                tanggal: cols[10]?.trim()
-            };
-        }).filter(row => row.nik && row.tanggal); // Hapus row kosong
+            return { nik: cols[1]?.trim(), nama: cols[2]?.trim(), judul: cols[11]?.trim(), tanggal: cols[10]?.trim() };
+        }).filter(row => row.nik && row.tanggal);
     });
 
 function filterData() {
     const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
-    if (!keyword) {
-        document.querySelector("#dataTable tbody").innerHTML = "";
-        return;
-    }
-
+    if (!keyword) { document.querySelector("#dataTable tbody").innerHTML = ""; return; }
     let filtered = allData.filter(row => row.nik?.toLowerCase().includes(keyword));
-
-    // Urutkan berdasarkan tanggal terbaru
-    filtered.sort((a, b) => {
-        const [da, ma, ya] = a.tanggal.split("/").map(Number);
-        const [db, mb, yb] = b.tanggal.split("/").map(Number);
-        return new Date(yb, mb - 1, db) - new Date(ya, ma - 1, da);
+    filtered.sort((a,b) => {
+        const [da,ma,ya] = a.tanggal.split("/").map(Number);
+        const [db,mb,yb] = b.tanggal.split("/").map(Number);
+        return new Date(yb,mb-1,db) - new Date(ya,ma-1,da);
     });
-
-    // Cari training terbaru per NIK
     let latestPerNIK = {};
     filtered.forEach(row => {
-        if (!latestPerNIK[row.nik]) {
-            latestPerNIK[row.nik] = row.tanggal;
-        } else {
-            const [d1, m1, y1] = latestPerNIK[row.nik].split("/").map(Number);
-            const [d2, m2, y2] = row.tanggal.split("/").map(Number);
-            if (new Date(y2, m2 - 1, d2) > new Date(y1, m1 - 1, d1)) {
-                latestPerNIK[row.nik] = row.tanggal;
-            }
+        if (!latestPerNIK[row.nik]) latestPerNIK[row.nik] = row.tanggal;
+        else {
+            const [d1,m1,y1] = latestPerNIK[row.nik].split("/").map(Number);
+            const [d2,m2,y2] = row.tanggal.split("/").map(Number);
+            if (new Date(y2,m2-1,d2) > new Date(y1,m1-1,d1)) latestPerNIK[row.nik] = row.tanggal;
         }
     });
-
     displayData(filtered, latestPerNIK);
 }
 
 function displayData(data, latestMap) {
     const tbody = document.querySelector("#dataTable tbody");
     tbody.innerHTML = "";
-
-    // Mapping warna ke setiap NIK
-    const nikList = [...new Set(data.map(item => item.nik))];
+    const nikList = [...new Set(data.map(i => i.nik))];
     const nikColorMap = {};
-    nikList.forEach((nik, idx) => {
-        nikColorMap[nik] = nikColors[idx % nikColors.length];
-    });
-
+    nikList.forEach((nik, idx) => nikColorMap[nik] = nikColors[idx % nikColors.length]);
     data.forEach(item => {
         const isLatest = item.tanggal === latestMap[item.nik];
         const row = document.createElement("tr");
@@ -133,7 +218,30 @@ function displayData(data, latestMap) {
         tbody.appendChild(row);
     });
 }
+
+// Modal
+function openModal() { document.getElementById("qrModal").style.display = "flex"; }
+function closeModal() { document.getElementById("qrModal").style.display = "none"; }
+
+// Scan Barcode
+function scanBarcode() {
+    const codeReader = new ZXing.BrowserQRCodeReader();
+    codeReader.decodeFromInputVideoDevice(undefined, "video")
+        .then(result => {
+            document.getElementById("searchInput").value = result.text;
+            filterData();
+            codeReader.reset();
+        })
+        .catch(err => alert("Gagal scan: " + err));
+}
+
+// Animasi icon kopi
+setTimeout(() => { document.querySelector(".coffee-icon").style.display = "inline-block"; }, 5000);
+setTimeout(() => { document.querySelector(".coffee-icon").style.display = "none"; }, 15000);
 </script>
+
+<!-- Video untuk scan -->
+<video id="video" style="width:100%; max-width:300px; display:none;"></video>
 
 </body>
 </html>
