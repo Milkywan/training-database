@@ -106,15 +106,12 @@
         <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
             <div onclick="zoomQR('gopay')">
                 <img src="https://raw.githubusercontent.com/Milkywan/training-database/main/Gopay.jpeg" alt="Gopay QR">
-                
             </div>
             <div onclick="zoomQR('dana')">
                 <img src="https://raw.githubusercontent.com/Milkywan/training-database/main/DANA.jpeg" alt="DANA QR">
-                
             </div>
             <div onclick="zoomQR('ovo')">
                 <img src="https://raw.githubusercontent.com/Milkywan/training-database/main/Ovo.jpeg" alt="OVO QR">
-                
             </div>
         </div>
         <p style="margin-top:10px;">Kalau nggak bisa scan, kirim aja manual ke nomor:<br>
@@ -205,9 +202,15 @@ function displayData(data, latestMap) {
     });
 }
 
-// Traktir
+// Modal traktir
 function openTraktir() { document.getElementById("traktirModal").style.display = "flex"; }
 function closeTraktir() { document.getElementById("traktirModal").style.display = "none"; }
+// Tutup modal traktir jika klik di luar
+window.addEventListener("click", function(e) {
+    if (e.target.id === "traktirModal") closeTraktir();
+});
+
+// Modal zoom QR
 function zoomQR(type) {
     let src = "";
     if (type === "gopay") src = "https://raw.githubusercontent.com/Milkywan/training-database/main/Gopay.jpeg";
@@ -217,6 +220,10 @@ function zoomQR(type) {
     document.getElementById("zoomModal").style.display = "flex";
 }
 function closeZoom() { document.getElementById("zoomModal").style.display = "none"; }
+// Tutup modal zoom jika klik di luar
+window.addEventListener("click", function(e) {
+    if (e.target.id === "zoomModal") closeZoom();
+});
 
 // Panah berkedip
 function showArrowHint() {
@@ -230,7 +237,3 @@ setInterval(showArrowHint, 10000);
 
 </body>
 </html>
-
-
-
-
