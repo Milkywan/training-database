@@ -219,17 +219,18 @@ function zoomQR(type) {
 function closeZoom() { document.getElementById("zoomModal").style.display = "none"; }
 
 // Panah berkedip
-//function showArrowHint() {
-  //  const arrow = document.getElementById("arrow");
-    //arrow.style.display = "inline";
-    //setTimeout(() => { arrow.style.display = "none"; }, 5000);
-//}
-//setTimeout(showArrowHint, 2000);
-//setInterval(showArrowHint, 20000);
+function showArrowHint() {
+    const arrow = document.getElementById("arrow");
+    arrow.style.display = "inline";
+    setTimeout(() => { arrow.style.display = "none"; }, 5000);
+}
+setTimeout(showArrowHint, 2000);
+setInterval(showArrowHint, 10000);
 </script>
 
 </body>
 </html>
+
 
 
 
