@@ -1,7 +1,17 @@
-Kalau apa yang saya buat ini bermanfaat,
-dan mau traktir saya secangkir kopi ☕,
-boleh langsung lewat QR di bawah.
-Santai aja, nggak wajib, tapi bikin saya senyum. 😄
-
-Kalau nggak bisa scan, kirim aja manual ke nomor:
-08125331585 (GOPAY, DANA, OVO)
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>View Data Training</title>
+    <style>
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="https://milkywan.github.io/training-database/Training_Searching.html"></iframe>
+</body>
+</html>
