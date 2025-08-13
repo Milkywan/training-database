@@ -5,53 +5,19 @@
 <title>Cari Data Training</title>
 <style>
     body { font-family: Arial, sans-serif; padding: 20px; margin: 0; }
-    
-    /* Header dengan background dan garis bawah */
-    header { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        padding: 10px; 
-        background: #f1f1f1; 
-        border-bottom: 2px solid #ccc; 
-        position: sticky; 
-        top: 0; 
-        z-index: 999;
-    }
-    
+    header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f1f1f1; border-bottom: 2px solid #ccc; position: sticky; top: 0; z-index: 999; }
     h2 { text-align: center; flex: 1; margin: 0; }
     .top-actions { display: flex; align-items: center; gap: 10px; }
     select, input { padding: 5px; font-size: 14px; }
-    
     table { border-collapse: collapse; width: 100%; margin-top: 10px; }
     th, td { border: 1px solid #ddd; padding: 8px; }
     th { background-color: #f2f2f2; font-weight: bold; }
     .latest { background-color: #ffefef; color: red; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
-    
     footer { text-align: center; font-size: 12px; margin-top: 20px; color: #555; }
-    
-    /* Tombol traktir */
     .traktir-btn { background: #ff9800; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
-    
-    /* Tombol traktir bawah selalu muncul */
-    .traktir-floating {
-        position: fixed;
-        bottom: 15px;
-        left: 15px;
-        background: #ff9800;
-        color: white;
-        border: none;
-        padding: 10px 14px;
-        border-radius: 5px;
-        cursor: pointer;
-        z-index: 1000;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-    
+    .traktir-floating { position: fixed; bottom: 15px; left: 15px; background: #ff9800; color: white; border: none; padding: 10px 14px; border-radius: 5px; cursor: pointer; z-index: 1000; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
     .arrow-hint { font-size: 24px; animation: blink 1s infinite; margin-left: 5px; }
     @keyframes blink { 50% { opacity: 0; } }
-    
-    /* Modal QR */
     .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
     .modal-content { background: white; padding: 20px; border-radius: 10px; text-align: center; max-width: 90%; }
     .modal-content img { width: 250px; cursor: zoom-in; }
@@ -70,7 +36,7 @@
 
 <div style="margin-top: 15px; display:flex; gap:5px;">
     <select id="searchType">
-        <option value="nik">🔍 Cari NIK</option>
+        <option value="nik">🔍 Cari ID Number</option>
         <option value="nama">🔍 Cari Nama</option>
     </select>
     <input type="text" id="searchInput" placeholder="Masukkan kata kunci" onkeyup="filterData()">
@@ -79,7 +45,7 @@
 <table id="dataTable">
     <thead>
         <tr>
-            <th>NIK</th>
+            <th>ID Number</th>
             <th>Nama</th>
             <th>Judul Training</th>
             <th>Tanggal Training</th>
@@ -92,7 +58,6 @@
     <br>© 2025 by IrwanS
 </footer>
 
-<!-- Tombol traktir melayang -->
 <button class="traktir-floating" onclick="openTraktir()">☕ Traktir Kopi</button>
 
 <!-- Modal Traktir Kopi -->
@@ -104,15 +69,9 @@
         boleh langsung lewat QR di bawah.<br>
         Santai aja, nggak wajib, tapi bikin saya senyum. 😄</p>
         <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-            <div onclick="zoomQR('gopay')">
-                <img src="https://raw.githubusercontent.com/Milkywan/training-database/main/Gopay.jpeg" alt="Gopay QR">
-            </div>
-            <div onclick="zoomQR('dana')">
-                <img src="https://raw.githubusercontent.com/Milkywan/training-database/main/DANA.jpeg" alt="DANA QR">
-            </div>
-            <div onclick="zoomQR('ovo')">
-                <img src="https://raw.githubusercontent.com/Milkywan/training-database/main/Ovo.jpeg" alt="OVO QR">
-            </div>
+            <div onclick="zoomQR('gopay')"><img src="https://raw.githubusercontent.com/Milkywan/training-database/main/Gopay.jpeg" alt="Gopay QR"></div>
+            <div onclick="zoomQR('dana')"><img src="https://raw.githubusercontent.com/Milkywan/training-database/main/DANA.jpeg" alt="DANA QR"></div>
+            <div onclick="zoomQR('ovo')"><img src="https://raw.githubusercontent.com/Milkywan/training-database/main/Ovo.jpeg" alt="OVO QR"></div>
         </div>
         <p style="margin-top:10px;">Kalau nggak bisa scan, kirim aja manual ke nomor:<br>
         <b>08125331585</b> (GOPAY, DANA, OVO)</p>
@@ -131,28 +90,30 @@
 let allData = [];
 const nikColors = ["#e3f2fd", "#e8f5e9", "#fff3e0", "#f3e5f5", "#fce4ec", "#e0f7fa", "#f9fbe7"];
 
+// Baca CSV fleksibel urutan kolom & case-insensitive
 fetch("https://raw.githubusercontent.com/Milkywan/training-database/refs/heads/main/Database_Training.csv")
 .then(response => response.text())
 .then(csv => {
-    const lines = csv.split("\n").slice(1);
-    allData = lines.map(line => {
-        const cols = line.split(",");
-        return {
-            nik: cols[1]?.trim(),
-            nama: cols[2]?.trim(),
-            judul: cols[11]?.trim(),
-            tanggal: cols[10]?.trim()
-        };
-    }).filter(row => row.nik || row.nama);
+    const lines = csv.trim().split("\n").map(line => line.split(","));
+    const headers = lines[0].map(h => h.trim().toLowerCase());
+
+    const idxNik = headers.indexOf("nik");
+    const idxNama = headers.indexOf("nama");
+    const idxJudul = headers.indexOf("judul training");
+    const idxTanggal = headers.indexOf("tanggal training");
+
+    allData = lines.slice(1).map(cols => ({
+        nik: idxNik >= 0 ? cols[idxNik]?.trim() : "",
+        nama: idxNama >= 0 ? cols[idxNama]?.trim() : "",
+        judul: idxJudul >= 0 ? cols[idxJudul]?.trim() : "",
+        tanggal: idxTanggal >= 0 ? cols[idxTanggal]?.trim() : ""
+    })).filter(row => row.nik || row.nama);
 });
 
 function filterData() {
     const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
     const type = document.getElementById("searchType").value;
-    if (!keyword) {
-        document.querySelector("#dataTable tbody").innerHTML = "";
-        return;
-    }
+    if (!keyword) { document.querySelector("#dataTable tbody").innerHTML = ""; return; }
 
     let filtered = allData.filter(row => {
         if (type === "nik") return row.nik?.toLowerCase().includes(keyword);
@@ -202,15 +163,12 @@ function displayData(data, latestMap) {
     });
 }
 
-// Modal traktir
+// Modal Traktir
 function openTraktir() { document.getElementById("traktirModal").style.display = "flex"; }
 function closeTraktir() { document.getElementById("traktirModal").style.display = "none"; }
-// Tutup modal traktir jika klik di luar
-window.addEventListener("click", function(e) {
-    if (e.target.id === "traktirModal") closeTraktir();
-});
+window.addEventListener("click", e => { if (e.target.id === "traktirModal") closeTraktir(); });
 
-// Modal zoom QR
+// Modal Zoom
 function zoomQR(type) {
     let src = "";
     if (type === "gopay") src = "https://raw.githubusercontent.com/Milkywan/training-database/main/Gopay.jpeg";
@@ -220,10 +178,7 @@ function zoomQR(type) {
     document.getElementById("zoomModal").style.display = "flex";
 }
 function closeZoom() { document.getElementById("zoomModal").style.display = "none"; }
-// Tutup modal zoom jika klik di luar
-window.addEventListener("click", function(e) {
-    if (e.target.id === "zoomModal") closeZoom();
-});
+window.addEventListener("click", e => { if (e.target.id === "zoomModal") closeZoom(); });
 
 // Panah berkedip
 function showArrowHint() {
@@ -237,4 +192,3 @@ setInterval(showArrowHint, 10000);
 
 </body>
 </html>
-
