@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Penting untuk responsif -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cari Data Training</title>
 <style>
     /* Styling Umum */
@@ -25,12 +25,63 @@
     header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f1f1f1; border-bottom: 2px solid #ccc; position: sticky; top: 0; z-index: 999; flex-wrap: wrap; }
     .top-actions { display: flex; align-items: center; gap: 10px; }
 
-    /* Modal */
+    /* Modal Umum */
     .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
-    .modal-content { background: white; padding: 25px; border-radius: 10px; text-align: center; max-width: 90%; max-height: 90vh; overflow-y: auto; position: relative; }
-    .modal-content img { width: 250px; cursor: zoom-in; height: auto; display: block; margin: 0 auto;}
-    .modal-content > div { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top: 15px; }
-    .modal-close { position: absolute; top: 15px; right: 20px; font-size: 32px; color: white; cursor: pointer; }
+
+    /* Tombol Close Modal */
+    .modal-close {
+        position: absolute; /* Tetap absolute, karena parent .modal adalah fixed (relatif terhadap viewport) */
+        top: 15px; /* Jarak dari atas overlay */
+        right: 20px; /* Jarak dari kanan overlay */
+        font-size: 32px;
+        color: white; /* Warna putih agar terlihat di background gelap */
+        cursor: pointer;
+        z-index: 2001; /* Pastikan di atas konten modal */
+    }
+
+    /* Konten Box Modal */
+    .modal-content {
+        background: white;
+        padding: 25px; /* Default padding */
+        padding-top: 55px; /* Tambahan padding di atas untuk memberi ruang tombol close */
+        border-radius: 10px;
+        text-align: center;
+        max-width: 500px; /* Lebar maksimal modal di desktop */
+        max-height: 90vh; /* Tinggi maksimal sebelum scroll */
+        overflow-y: auto; /* Bisa di-scroll kalau kontennya panjang */
+        position: relative; /* Penting untuk beberapa elemen di dalamnya */
+        box-sizing: border-box;
+    }
+    .modal-content p {
+        margin-bottom: 15px; /* Spasi antar paragraf */
+    }
+    .modal-content > div { /* Container untuk gambar QR di traktirModal */
+        display:flex;
+        gap:15px;
+        justify-content:center;
+        flex-wrap:wrap;
+        margin-top: 15px;
+    }
+    .modal-content img { /* Aturan umum untuk semua gambar di dalam modal-content */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        max-width: 100%; /* Pastikan gambar tidak melebihi lebar parent */
+    }
+
+    /* Styling spesifik untuk gambar QR di modal "Traktir Kopi" */
+    #traktirModal .modal-content > div img {
+        width: 250px; /* Ukuran asli gambar QR di desktop */
+        cursor: zoom-in;
+    }
+
+    /* Styling spesifik untuk gambar QR yang di-zoom */
+    #zoomQRImg {
+        width: 90%; /* Lebar gambar saat di-zoom */
+        max-width: 500px; /* Lebar maksimal gambar zoom di desktop */
+        cursor: default; /* Kursor default saat sudah di-zoom */
+    }
+
 
     /* Kontainer Tabel untuk Scroll Horizontal di Mobile */
     .table-container {
@@ -71,7 +122,7 @@
         }
 
         /* Search input menumpuk */
-        div[style*="display:flex; gap:10px; flex-wrap: wrap;"] { /* Targeting div search */
+        div[style*="display:flex; gap:10px; flex-wrap: wrap;"] {
             flex-direction: column;
             gap: 10px;
         }
@@ -80,7 +131,7 @@
         }
 
         table {
-            min-width: 600px; /* Pastikan lebar minimum tabel agar tidak terlalu gepeng, biarkan scroll */
+            min-width: 600px;
         }
         th, td {
             padding: 8px;
@@ -96,17 +147,34 @@
         }
 
         /* Modal di mobile */
-        .modal-content {
-            padding: 15px;
-        }
         .modal-close {
-            top: 5px;
+            top: 10px; /* Lebih dekat ke pinggir di mobile */
             right: 10px;
             font-size: 28px;
         }
-        .modal-content img {
-            width: 90%;
-            max-width: 200px;
+        .modal-content {
+            padding: 15px; /* Padding lebih kecil di mobile */
+            padding-top: 45px; /* Ruang cukup untuk tombol close di mobile */
+            max-width: 95%; /* Lebih lebar di mobile untuk memaksimalkan layar */
+            max-height: 90vh; /* Tinggi tetap terkontrol */
+        }
+        .modal-content p {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        /* Penyesuaian gambar QR di traktirModal untuk mobile */
+        #traktirModal .modal-content > div img {
+            width: 100%; /* Isi penuh kolomnya */
+            max-width: 100px; /* Batasi ukuran setiap QR agar muat 3 dalam 1 baris */
+        }
+        #traktirModal .modal-content > div {
+            gap: 8px; /* Gap lebih kecil antar QR di mobile */
+        }
+
+        /* Penyesuaian gambar zoomQRImg di mobile */
+        #zoomQRImg {
+            width: 100%;
+            max-width: 300px; /* Ukuran maksimal gambar zoom di mobile */
         }
     }
 </style>
@@ -126,7 +194,7 @@
         <option value="nik">🔍 Cari ID Number</option>
         <option value="nama">🔍 Cari Nama</option>
     </select>
-    <input type="text" id="searchInput" placeholder="Masukkan kata kunci" onkeyup="debouncedFilterData()"> <!-- Perubahan di sini -->
+    <input type="text" id="searchInput" placeholder="Masukkan kata kunci" onkeyup="debouncedFilterData()">
 </div>
 
 <div class="table-container">
@@ -171,7 +239,7 @@
 <div id="zoomModal" class="modal">
     <span class="modal-close" onclick="closeZoom()">&times;</span>
     <div class="modal-content">
-        <img id="zoomQRImg" src="" alt="QR Besar" style="width:90%; max-width:500px;">
+        <img id="zoomQRImg" src="" alt="QR Besar"> <!-- Inline style removed -->
     </div>
 </div>
 
@@ -179,14 +247,12 @@
 let allData = [];
 const nikColors = ["#e3f2fd", "#e8f5e9", "#fff3e0", "#f3e5f5", "#fce4ec", "#e0f7fa", "#f9fbe7"];
 
-// Fungsi parseDate (dipindahkan ke atas agar bisa diakses di fetch dan filterData)
 function parseDate(dateStr) {
-    if (!dateStr) return new Date(0); // Tanggal default jika kosong
+    if (!dateStr) return new Date(0);
     const [d, m, y] = dateStr.split("/").map(Number);
     return new Date(y, m - 1, d);
 }
 
-// Fungsi debounce untuk mengurangi beban pemrosesan input
 function debounce(func, delay) {
     let timeout;
     return function(...args) {
@@ -196,10 +262,8 @@ function debounce(func, delay) {
     };
 }
 
-// Membuat versi debounced dari filterData, dengan delay 300ms (0.3 detik)
 const debouncedFilterData = debounce(filterData, 300);
 
-// Baca CSV fleksibel urutan kolom & case-insensitive
 fetch("https://raw.githubusercontent.com/Milkywan/training-database/refs/heads/main/Database_Training.csv")
 .then(response => response.text())
 .then(csv => {
@@ -218,12 +282,11 @@ fetch("https://raw.githubusercontent.com/Milkywan/training-database/refs/heads/m
             judul: idxJudul >= 0 ? cols[idxJudul]?.trim() : "",
             tanggal: idxTanggal >= 0 ? cols[idxTanggal]?.trim() : ""
         };
-        // Menambahkan timestamp saat parsing awal untuk efisiensi sorting
         item.tanggalTimestamp = item.tanggal ? parseDate(item.tanggal).getTime() : 0;
         return item;
     }).filter(row => row.nik || row.nama);
 })
-.catch(error => console.error("Error fetching or parsing CSV:", error)); // Tambahkan penanganan error
+.catch(error => console.error("Error fetching or parsing CSV:", error));
 
 function filterData() {
     const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
@@ -233,12 +296,11 @@ function filterData() {
     let filtered = allData.filter(row => {
         if (type === "nik") return row.nik?.toLowerCase().includes(keyword);
         if (type === "nama") return row.nama?.toLowerCase().includes(keyword);
-        return false; // Mengembalikan false jika type tidak cocok
+        return false;
     });
 
-    // Menggunakan tanggalTimestamp untuk sorting yang lebih cepat
     filtered.sort((a, b) => {
-        return b.tanggalTimestamp - a.tanggalTimestamp; // Urutkan dari terbaru ke terlama
+        return b.tanggalTimestamp - a.tanggalTimestamp;
     });
 
     let latestPerNIK = {};
@@ -249,7 +311,6 @@ function filterData() {
                 timestamp: row.tanggalTimestamp
             };
         } else {
-            // Membandingkan timestamp untuk menemukan tanggal terbaru
             if (row.tanggalTimestamp > latestPerNIK[row.nik].timestamp) {
                 latestPerNIK[row.nik] = {
                     tanggal: row.tanggal,
@@ -270,7 +331,6 @@ function displayData(data, latestMap) {
     nikList.forEach((nik, idx) => { nikColorMap[nik] = nikColors[idx % nikColors.length]; });
 
     data.forEach(item => {
-        // Cek isLatest dengan membandingkan string tanggal asli dari latestMap
         const isLatest = item.tanggal === latestMap[item.nik]?.tanggal;
         const row = document.createElement("tr");
         row.style.backgroundColor = nikColorMap[item.nik];
@@ -304,8 +364,7 @@ window.addEventListener("click", e => { if (e.target.id === "zoomModal") closeZo
 // Panah berkedip
 function showArrowHint() {
     const arrow = document.getElementById("arrow");
-    // Hanya tampilkan jika layar cukup lebar (tidak di mobile)
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > 768) { // Hanya tampilkan jika layar cukup lebar (tidak di mobile)
         arrow.style.display = "inline";
         setTimeout(() => { arrow.style.display = "none"; }, 5000);
     }
