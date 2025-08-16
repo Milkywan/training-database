@@ -445,6 +445,9 @@ function displayData(data, latestMap) {
     nikList.forEach((nik, idx) => { nikColorMap[nik] = nikColors[idx % nikColors.length]; });
 
     let rowNum = 1; // Inisialisasi nomor urut
+    let totalDataDisplayed = 0; // Untuk menghitung total data yang ditampilkan di tabel
+
+    const yearlyTotals = {}; // Untuk menyimpan total durasi, jumlah data, dan peserta unik per tahun
 
     data.forEach(item => {
         const displayedTanggal = formatDateToDisplay(parseDate(item.tanggal));
@@ -462,20 +465,23 @@ function displayData(data, latestMap) {
             <td>${item.calculatedExpiredDate || "-"}</td>
         `;
         tbody.appendChild(row);
-    });
+        totalDataDisplayed++; // Tambahkan ke hitungan total data yang ditampilkan
 
-    const yearlyTotals = {};
-    data.forEach(item => {
+        // Akumulasi data untuk perhitungan total per tahun
         const trainingDate = parseDate(item.tanggal);
-        if (isNaN(trainingDate.getTime()) || trainingDate.getFullYear() < 1900) {
-            return;
+        if (!isNaN(trainingDate.getTime()) && trainingDate.getFullYear() >= 1900) {
+            const year = trainingDate.getFullYear();
+            if (!yearlyTotals[year]) {
+                yearlyTotals[year] = {
+                    totalDuration: 0,
+                    dataCount: 0,
+                    uniqueParticipants: new Set() // Menggunakan Set untuk menyimpan NIK unik
+                };
+            }
+            yearlyTotals[year].totalDuration += item.durasi;
+            yearlyTotals[year].dataCount++;
+            yearlyTotals[year].uniqueParticipants.add(item.nik); // Tambahkan NIK ke Set
         }
-
-        const year = trainingDate.getFullYear();
-        if (!yearlyTotals[year]) {
-            yearlyTotals[year] = 0;
-        }
-        yearlyTotals[year] += item.durasi;
     });
 
     const sortedYears = Object.keys(yearlyTotals).sort((a, b) => b - a);
@@ -486,10 +492,17 @@ function displayData(data, latestMap) {
         totalDurationsContainer.appendChild(totalsHeader);
 
         sortedYears.forEach(year => {
+            const totalInfo = yearlyTotals[year];
             const totalItem = document.createElement("p");
-            totalItem.innerHTML = `Total Durasi Training (${year}): <b>${yearlyTotals[year]} Jam</b>`;
+            totalItem.innerHTML = `Total Durasi Training (${year}): <b>${totalInfo.totalDuration} Jam</b> ` +
+                                  `( ${totalInfo.dataCount} data), dari ${totalInfo.uniqueParticipants.size} peserta`;
             totalDurationsContainer.appendChild(totalItem);
         });
+
+        // Tampilkan total jumlah data yang tersaji secara keseluruhan
+        const totalCountParagraph = document.createElement("p");
+        totalCountParagraph.innerHTML = `<b>Jumlah Data Total: ${totalDataDisplayed}</b>`;
+        totalDurationsContainer.appendChild(totalCountParagraph);
     }
 }
 
