@@ -204,12 +204,13 @@
     <table id="dataTable">
         <thead>
             <tr>
+                <th>No.</th> <!-- Kolom Baru untuk Nomor Urut -->
                 <th>ID Number</th>
                 <th>Nama</th>
                 <th>Judul Training</th>
                 <th>Tanggal Training</th>
-                <th>Durasi Training (Jam)</th> <!-- Kolom Baru -->
-                <th>Expired Date</th> <!-- Kolom Baru -->
+                <th>Durasi Training (Jam)</th>
+                <th>Expired Date</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -258,12 +259,10 @@
 let allData = [];
 const nikColors = ["#e3f2fd", "#e8f5e9", "#fff3e0", "#f3e5f5", "#fce4ec", "#e0f7fa", "#f9fbe7"];
 
-// Array nama bulan untuk tampilan
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 
-// Fungsi pembantu yang lebih robust untuk mem-parsing tanggal (MM/DD/YYYY atau DD/MM/YYYY)
 function parseDate(dateStr) {
-    if (!dateStr) return new Date(0); // Return epoch start if empty
+    if (!dateStr) return new Date(0);
     dateStr = dateStr.trim();
 
     // Try parsing as MM/DD/YYYY first (most common for your data)
@@ -303,7 +302,6 @@ function parseDate(dateStr) {
 }
 
 
-// Fungsi pembantu untuk memformat objek Date menjadi DD Mon YYYY
 function formatDateToDisplay(date) {
     // Check for invalid date objects or dates too far in the past (like epoch 1970)
     if (!date || isNaN(date.getTime()) || date.getFullYear() < 1900) return "-";
@@ -314,7 +312,6 @@ function formatDateToDisplay(date) {
     return `${d} ${m} ${y}`;
 }
 
-// Fungsi untuk menghitung tanggal kedaluwarsa
 function calculateExpiredDate(trainingDateStr, expiredDateFromCSV) {
     let expiredDateObj;
 
@@ -337,7 +334,6 @@ function calculateExpiredDate(trainingDateStr, expiredDateFromCSV) {
     return formatDateToDisplay(expiredDateObj);
 }
 
-// Fungsi debounce untuk menunda eksekusi filterData
 function debounce(func, delay) {
     let timeout;
     return function(...args) {
@@ -349,7 +345,6 @@ function debounce(func, delay) {
 
 const debouncedFilterData = debounce(filterData, 300);
 
-// Fetch dan parse CSV menggunakan PapaParse
 fetch("https://raw.githubusercontent.com/Milkywan/training-database/refs/heads/main/Database_Training.csv")
 .then(response => response.text())
 .then(csv => {
@@ -449,16 +444,16 @@ function displayData(data, latestMap) {
     const nikColorMap = {};
     nikList.forEach((nik, idx) => { nikColorMap[nik] = nikColors[idx % nikColors.length]; });
 
+    let rowNum = 1; // Inisialisasi nomor urut
+
     data.forEach(item => {
-        // Parse tanggal string menjadi objek Date, lalu format untuk tampilan
         const displayedTanggal = formatDateToDisplay(parseDate(item.tanggal));
-        // Periksa apakah tanggal ini adalah tanggal terbaru berdasarkan string format MM/DD/YYYY
-        // Kita bandingkan string aslinya untuk menentukan 'terbaru'
         const isLatest = item.tanggal === latestMap[item.nik]?.tanggal; 
 
         const row = document.createElement("tr");
         row.style.backgroundColor = nikColorMap[item.nik];
         row.innerHTML = `
+            <td>${rowNum++}</td> <!-- Tampilkan nomor urut dan tingkatkan -->
             <td>${item.nik || "-"}</td>
             <td>${item.nama || "-"}</td>
             <td>${item.judul || "-"}</td>
@@ -471,7 +466,6 @@ function displayData(data, latestMap) {
 
     const yearlyTotals = {};
     data.forEach(item => {
-        // Pastikan kita menggunakan hasil parsing tanggal yang benar untuk total
         const trainingDate = parseDate(item.tanggal);
         if (isNaN(trainingDate.getTime()) || trainingDate.getFullYear() < 1900) {
             return;
