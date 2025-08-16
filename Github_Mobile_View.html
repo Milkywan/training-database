@@ -14,6 +14,9 @@
     th { background-color: #f2f2f2; font-weight: bold; }
     .latest { background-color: #ffefef; color: red; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; }
     footer { text-align: center; font-size: 12px; margin-top: 20px; color: #555; }
+    #totalDurationsContainer { margin-top: 20px; padding: 10px; border-top: 1px solid #eee; }
+    #totalDurationsContainer h3 { margin-bottom: 10px; color: #333; }
+    #totalDurationsContainer p { margin-bottom: 5px; color: #555; }
 
     /* Tombol Traktir */
     .traktir-btn { background: #ff9800; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 15px; white-space: nowrap; }
@@ -30,56 +33,56 @@
 
     /* Tombol Close Modal */
     .modal-close {
-        position: absolute; /* Tetap absolute, karena parent .modal adalah fixed (relatif terhadap viewport) */
-        top: 15px; /* Jarak dari atas overlay */
-        right: 20px; /* Jarak dari kanan overlay */
+        position: absolute;
+        top: 15px;
+        right: 20px;
         font-size: 32px;
-        color: white; /* Warna putih agar terlihat di background gelap */
+        color: white;
         cursor: pointer;
-        z-index: 2001; /* Pastikan di atas konten modal */
+        z-index: 2001;
     }
 
     /* Konten Box Modal */
     .modal-content {
         background: white;
-        padding: 25px; /* Default padding */
-        padding-top: 55px; /* Tambahan padding di atas untuk memberi ruang tombol close */
+        padding: 25px;
+        padding-top: 55px;
         border-radius: 10px;
         text-align: center;
-        max-width: 500px; /* Lebar maksimal modal di desktop */
-        max-height: 90vh; /* Tinggi maksimal sebelum scroll */
-        overflow-y: auto; /* Bisa di-scroll kalau kontennya panjang */
-        position: relative; /* Penting untuk beberapa elemen di dalamnya */
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
         box-sizing: border-box;
     }
     .modal-content p {
-        margin-bottom: 15px; /* Spasi antar paragraf */
+        margin-bottom: 15px;
     }
-    .modal-content > div { /* Container untuk gambar QR di traktirModal */
+    .modal-content > div {
         display:flex;
         gap:15px;
         justify-content:center;
         flex-wrap:wrap;
         margin-top: 15px;
     }
-    .modal-content img { /* Aturan umum untuk semua gambar di dalam modal-content */
+    .modal-content img {
         height: auto;
         display: block;
         margin: 0 auto;
-        max-width: 100%; /* Pastikan gambar tidak melebihi lebar parent */
+        max-width: 100%;
     }
 
     /* Styling spesifik untuk gambar QR di modal "Traktir Kopi" */
     #traktirModal .modal-content > div img {
-        width: 250px; /* Ukuran asli gambar QR di desktop */
+        width: 250px;
         cursor: zoom-in;
     }
 
     /* Styling spesifik untuk gambar QR yang di-zoom */
     #zoomQRImg {
-        width: 90%; /* Lebar gambar saat di-zoom */
-        max-width: 500px; /* Lebar maksimal gambar zoom di desktop */
-        cursor: default; /* Kursor default saat sudah di-zoom */
+        width: 90%;
+        max-width: 500px;
+        cursor: default;
     }
 
 
@@ -118,7 +121,7 @@
             font-size: 1.2em;
         }
         .arrow-hint {
-            display: none !important; /* Sembunyikan panah di mobile jika terlalu mengganggu */
+            display: none !important;
         }
 
         /* Search input menumpuk */
@@ -148,15 +151,15 @@
 
         /* Modal di mobile */
         .modal-close {
-            top: 10px; /* Lebih dekat ke pinggir di mobile */
+            top: 10px;
             right: 10px;
             font-size: 28px;
         }
         .modal-content {
-            padding: 15px; /* Padding lebih kecil di mobile */
-            padding-top: 45px; /* Ruang cukup untuk tombol close di mobile */
-            max-width: 95%; /* Lebih lebar di mobile untuk memaksimalkan layar */
-            max-height: 90vh; /* Tinggi tetap terkontrol */
+            padding: 15px;
+            padding-top: 45px;
+            max-width: 95%;
+            max-height: 90vh;
         }
         .modal-content p {
             font-size: 14px;
@@ -164,17 +167,17 @@
         }
         /* Penyesuaian gambar QR di traktirModal untuk mobile */
         #traktirModal .modal-content > div img {
-            width: 100%; /* Isi penuh kolomnya */
-            max-width: 100px; /* Batasi ukuran setiap QR agar muat 3 dalam 1 baris */
+            width: 100%;
+            max-width: 100px;
         }
         #traktirModal .modal-content > div {
-            gap: 8px; /* Gap lebih kecil antar QR di mobile */
+            gap: 8px;
         }
 
         /* Penyesuaian gambar zoomQRImg di mobile */
         #zoomQRImg {
             width: 100%;
-            max-width: 300px; /* Ukuran maksimal gambar zoom di mobile */
+            max-width: 300px;
         }
     }
 </style>
@@ -205,10 +208,17 @@
                 <th>Nama</th>
                 <th>Judul Training</th>
                 <th>Tanggal Training</th>
+                <th>Durasi Training (Jam)</th> <!-- Kolom Baru -->
+                <th>Expired Date</th> <!-- Kolom Baru -->
             </tr>
         </thead>
         <tbody></tbody>
     </table>
+</div>
+
+<!-- Area untuk menampilkan Total Durasi per Tahun -->
+<div id="totalDurationsContainer">
+    <!-- Konten akan diisi oleh JavaScript -->
 </div>
 
 <footer>
@@ -239,20 +249,95 @@
 <div id="zoomModal" class="modal">
     <span class="modal-close" onclick="closeZoom()">&times;</span>
     <div class="modal-content">
-        <img id="zoomQRImg" src="" alt="QR Besar"> <!-- Inline style removed -->
+        <img id="zoomQRImg" src="" alt="QR Besar">
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script>
 let allData = [];
 const nikColors = ["#e3f2fd", "#e8f5e9", "#fff3e0", "#f3e5f5", "#fce4ec", "#e0f7fa", "#f9fbe7"];
 
+// Array nama bulan untuk tampilan
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+// Fungsi pembantu yang lebih robust untuk mem-parsing tanggal (MM/DD/YYYY atau DD/MM/YYYY)
 function parseDate(dateStr) {
-    if (!dateStr) return new Date(0);
-    const [d, m, y] = dateStr.split("/").map(Number);
-    return new Date(y, m - 1, d);
+    if (!dateStr) return new Date(0); // Return epoch start if empty
+    dateStr = dateStr.trim();
+
+    // Try parsing as MM/DD/YYYY first (most common for your data)
+    let parts = dateStr.split("/");
+    if (parts.length === 3) {
+        let m = parseInt(parts[0], 10);
+        let d = parseInt(parts[1], 10);
+        let y = parseInt(parts[2], 10);
+        // Basic sanity check and create a Date object
+        if (m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+            const testDate = new Date(y, m - 1, d);
+            // Verify if the parsed date matches the input parts (e.g., 2/30/2023 is not Feb 30)
+            if (testDate.getFullYear() === y && testDate.getMonth() === m - 1 && testDate.getDate() === d) {
+                return testDate;
+            }
+        }
+    }
+
+    // If MM/DD/YYYY parsing failed or was invalid, try DD/MM/YYYY
+    parts = dateStr.split("/");
+    if (parts.length === 3) {
+        let d = parseInt(parts[0], 10);
+        let m = parseInt(parts[1], 10);
+        let y = parseInt(parts[2], 10);
+        // Basic sanity check and create a Date object
+        if (m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+            const testDate = new Date(y, m - 1, d);
+            // Verify if the parsed date matches the input parts
+            if (testDate.getFullYear() === y && testDate.getMonth() === m - 1 && testDate.getDate() === d) {
+                return testDate;
+            }
+        }
+    }
+    
+    // Fallback for invalid format or empty string. Returns Jan 1, 1970 UTC.
+    return new Date(0);
 }
 
+
+// Fungsi pembantu untuk memformat objek Date menjadi DD Mon YYYY
+function formatDateToDisplay(date) {
+    // Check for invalid date objects or dates too far in the past (like epoch 1970)
+    if (!date || isNaN(date.getTime()) || date.getFullYear() < 1900) return "-";
+    
+    const d = date.getDate();
+    const m = monthNames[date.getMonth()]; // Ambil nama bulan dari array
+    const y = date.getFullYear();
+    return `${d} ${m} ${y}`;
+}
+
+// Fungsi untuk menghitung tanggal kedaluwarsa
+function calculateExpiredDate(trainingDateStr, expiredDateFromCSV) {
+    let expiredDateObj;
+
+    // Prioritaskan tanggal expired yang sudah ada di CSV
+    if (expiredDateFromCSV && expiredDateFromCSV.trim() !== "") {
+        expiredDateObj = parseDate(expiredDateFromCSV);
+    }
+
+    // Jika expiredDate dari CSV tidak valid atau kosong, hitung 1 tahun setelah Tanggal Training
+    if (!expiredDateObj || isNaN(expiredDateObj.getTime()) || expiredDateObj.getFullYear() < 1900) {
+        const trainingDate = parseDate(trainingDateStr);
+        if (isNaN(trainingDate.getTime()) || trainingDate.getFullYear() < 1900) {
+            return "-"; // Jika tanggal training juga tidak valid
+        }
+        expiredDateObj = new Date(trainingDate);
+        expiredDateObj.setFullYear(expiredDateObj.getFullYear() + 1); // Tambah 1 tahun
+    }
+    
+    // Kembalikan tanggal expired dalam format tampilan yang baru
+    return formatDateToDisplay(expiredDateObj);
+}
+
+// Fungsi debounce untuk menunda eksekusi filterData
 function debounce(func, delay) {
     let timeout;
     return function(...args) {
@@ -264,34 +349,72 @@ function debounce(func, delay) {
 
 const debouncedFilterData = debounce(filterData, 300);
 
+// Fetch dan parse CSV menggunakan PapaParse
 fetch("https://raw.githubusercontent.com/Milkywan/training-database/refs/heads/main/Database_Training.csv")
 .then(response => response.text())
 .then(csv => {
-    const lines = csv.trim().split("\n").map(line => line.split(","));
-    const headers = lines[0].map(h => h.trim().toLowerCase());
+    Papa.parse(csv, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const csvHeaders = results.meta.fields;
 
-    const idxNik = headers.indexOf("nik");
-    const idxNama = headers.indexOf("nama");
-    const idxJudul = headers.indexOf("judul training");
-    const idxTanggal = headers.indexOf("tanggal training");
+            const findActualHeader = (targetHeaderName) => {
+                const lowerTarget = targetHeaderName.toLowerCase();
+                for (const header of csvHeaders) {
+                    if (header.toLowerCase() === lowerTarget) {
+                        return header;
+                    }
+                }
+                return null;
+            };
 
-    allData = lines.slice(1).map(cols => {
-        const item = {
-            nik: idxNik >= 0 ? cols[idxNik]?.trim() : "",
-            nama: idxNama >= 0 ? cols[idxNama]?.trim() : "",
-            judul: idxJudul >= 0 ? cols[idxJudul]?.trim() : "",
-            tanggal: idxTanggal >= 0 ? cols[idxTanggal]?.trim() : ""
-        };
-        item.tanggalTimestamp = item.tanggal ? parseDate(item.tanggal).getTime() : 0;
-        return item;
-    }).filter(row => row.nik || row.nama);
+            const actualHeaders = {
+                nik: findActualHeader("NIK"),
+                nama: findActualHeader("NAMA"),
+                judul: findActualHeader("JUDUL TRAINING"),
+                tanggal: findActualHeader("TANGGAL TRAINING"),
+                durasi: findActualHeader("DURASI TRAINING"),
+                expiredDate: findActualHeader("Expired date")
+            };
+
+            allData = results.data.map(row => {
+                const rawTanggal = actualHeaders.tanggal ? row[actualHeaders.tanggal]?.trim() : "";
+                const rawDurasi = actualHeaders.durasi ? row[actualHeaders.durasi]?.trim() : "0";
+                const rawExpired = actualHeaders.expiredDate ? row[actualHeaders.expiredDate]?.trim() : "";
+
+                const item = {
+                    nik: actualHeaders.nik ? row[actualHeaders.nik]?.trim() : "",
+                    nama: actualHeaders.nama ? row[actualHeaders.nama]?.trim() : "",
+                    judul: actualHeaders.judul ? row[actualHeaders.judul]?.trim() : "",
+                    tanggal: rawTanggal, // Masih simpan raw string untuk parsing nanti
+                    durasi: parseFloat(rawDurasi.replace(',', '.')) || 0,
+                    expiredDateFromCSV: rawExpired
+                };
+                item.tanggalTimestamp = parseDate(item.tanggal).getTime(); // Gunakan parseDate untuk timestamp
+                item.calculatedExpiredDate = calculateExpiredDate(item.tanggal, item.expiredDateFromCSV);
+
+                return item;
+            }).filter(row => row.nik || row.nama);
+        },
+        error: function(err, file, inputElem, reason) {
+            console.error("Error parsing CSV:", err, reason);
+        }
+    });
 })
-.catch(error => console.error("Error fetching or parsing CSV:", error));
+.catch(error => console.error("Error fetching CSV:", error));
 
 function filterData() {
     const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
     const type = document.getElementById("searchType").value;
-    if (!keyword) { document.querySelector("#dataTable tbody").innerHTML = ""; return; }
+    const tbody = document.querySelector("#dataTable tbody");
+    const totalDurationsContainer = document.getElementById("totalDurationsContainer");
+
+    if (!keyword) {
+        tbody.innerHTML = "";
+        totalDurationsContainer.innerHTML = "";
+        return;
+    }
 
     let filtered = allData.filter(row => {
         if (type === "nik") return row.nik?.toLowerCase().includes(keyword);
@@ -305,18 +428,11 @@ function filterData() {
 
     let latestPerNIK = {};
     filtered.forEach(row => {
-        if (!latestPerNIK[row.nik]) {
+        if (!latestPerNIK[row.nik] || row.tanggalTimestamp > latestPerNIK[row.nik].timestamp) {
             latestPerNIK[row.nik] = {
                 tanggal: row.tanggal,
                 timestamp: row.tanggalTimestamp
             };
-        } else {
-            if (row.tanggalTimestamp > latestPerNIK[row.nik].timestamp) {
-                latestPerNIK[row.nik] = {
-                    tanggal: row.tanggal,
-                    timestamp: row.tanggalTimestamp
-                };
-            }
         }
     });
 
@@ -325,23 +441,62 @@ function filterData() {
 
 function displayData(data, latestMap) {
     const tbody = document.querySelector("#dataTable tbody");
+    const totalDurationsContainer = document.getElementById("totalDurationsContainer");
     tbody.innerHTML = "";
+    totalDurationsContainer.innerHTML = "";
+
     const nikList = [...new Set(data.map(item => item.nik))];
     const nikColorMap = {};
     nikList.forEach((nik, idx) => { nikColorMap[nik] = nikColors[idx % nikColors.length]; });
 
     data.forEach(item => {
-        const isLatest = item.tanggal === latestMap[item.nik]?.tanggal;
+        // Parse tanggal string menjadi objek Date, lalu format untuk tampilan
+        const displayedTanggal = formatDateToDisplay(parseDate(item.tanggal));
+        // Periksa apakah tanggal ini adalah tanggal terbaru berdasarkan string format MM/DD/YYYY
+        // Kita bandingkan string aslinya untuk menentukan 'terbaru'
+        const isLatest = item.tanggal === latestMap[item.nik]?.tanggal; 
+
         const row = document.createElement("tr");
         row.style.backgroundColor = nikColorMap[item.nik];
         row.innerHTML = `
             <td>${item.nik || "-"}</td>
             <td>${item.nama || "-"}</td>
             <td>${item.judul || "-"}</td>
-            <td>${isLatest ? `<span class="latest">${item.tanggal} 🔥 Terbaru</span>` : item.tanggal || "-"}</td>
+            <td>${isLatest ? `<span class="latest">${displayedTanggal} 🔥 Terbaru</span>` : displayedTanggal || "-"}</td>
+            <td>${item.durasi !== undefined ? item.durasi : "-"}</td>
+            <td>${item.calculatedExpiredDate || "-"}</td>
         `;
         tbody.appendChild(row);
     });
+
+    const yearlyTotals = {};
+    data.forEach(item => {
+        // Pastikan kita menggunakan hasil parsing tanggal yang benar untuk total
+        const trainingDate = parseDate(item.tanggal);
+        if (isNaN(trainingDate.getTime()) || trainingDate.getFullYear() < 1900) {
+            return;
+        }
+
+        const year = trainingDate.getFullYear();
+        if (!yearlyTotals[year]) {
+            yearlyTotals[year] = 0;
+        }
+        yearlyTotals[year] += item.durasi;
+    });
+
+    const sortedYears = Object.keys(yearlyTotals).sort((a, b) => b - a);
+
+    if (sortedYears.length > 0) {
+        const totalsHeader = document.createElement("h3");
+        totalsHeader.textContent = "Ringkasan Durasi Training:";
+        totalDurationsContainer.appendChild(totalsHeader);
+
+        sortedYears.forEach(year => {
+            const totalItem = document.createElement("p");
+            totalItem.innerHTML = `Total Durasi Training (${year}): <b>${yearlyTotals[year]} Jam</b>`;
+            totalDurationsContainer.appendChild(totalItem);
+        });
+    }
 }
 
 // Modal Traktir
