@@ -13,16 +13,17 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="">
   <meta name="theme-color" content="#1f1147" />
+
   <style>
     :root{
-      --bg: #0b0a12;        
+      --bg: #0b0a12;            
       --elev: #141126;        
       --muted:#a3a3b2;        
       --text:#ececf2;        
-      --brand:#6d28d9;       
+      --brand:#6d28d9;         
       --brand-2:#9333ea;       
-      --brand-3:#a855f7;      
-      --ok:#34d399;           
+      --brand-3:#a855f7;        
+      --ok:#34d399;          
       --radius: 18px;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --maxw: 1120px;
@@ -57,7 +58,13 @@
 
     .grid{display:grid; gap:18px}
     .grid.cards{grid-template-columns: repeat(12, 1fr)}
-    .card{background:linear-gradient(180deg, rgba(20,17,38,.85), rgba(20,17,38,.6)); border:1px solid rgba(163,163,178,.15); border-radius:var(--radius); padding:20px}
+    .card{
+      background:linear-gradient(180deg, rgba(20,17,38,.85), rgba(20,17,38,.6));
+      border:1px solid rgba(163,163,178,.15);
+      border-radius:var(--radius);
+      padding:20px;
+      position: relative;
+    }
     .card h3{margin:0 0 8px}
 
     .section{padding:18px 0 8px}
@@ -78,12 +85,10 @@
     .contact{display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:10px}
     .contact .card a{word-break:break-word}
 
-   
     .hero-photo-wrap{display:grid; place-items:center}
     .hero-photo{width:260px; height:260px; border-radius:999px; object-fit:cover; border:3px solid rgba(168,85,247,.5); box-shadow:0 12px 40px rgba(109,40,217,.35); cursor:pointer}
     .hero-photo:hover{transform:translateY(-1px)}
 
- 
     .lightbox{position:fixed; inset:0; background:rgba(0,0,0,.6); display:grid; place-items:center; opacity:0; pointer-events:none; transition:.2s ease; z-index:50}
     .lightbox.active{opacity:1; pointer-events:auto}
     .lightbox .dialog{position:relative; max-width:min(92vw, 980px);}
@@ -95,46 +100,194 @@
     .chip-outline.linkedin{color:#0A66C2}
     .chip-outline.linkedin:hover{background:rgba(10,102,194,.12)}
 
-    .footer{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:24px 0; color:var(--muted)}
-    .footer a{color:var(--text); text-decoration:none}
-    .social{display:flex; gap:10px; align-items:center}
-    .icon{width:22px; height:22px; display:inline-block}
+    .portfolio-thumbs-wrapper {
+      margin: 12px 0 6px;
+      position: relative;
+      padding: 0 40px;
+    }
 
+    .portfolio-thumbs {
+      position: relative;
+      width: 100%;
+      height: 96px; 
+      overflow: hidden; 
+      white-space: nowrap;
+    }
+
+    .thumb-img {
+      position: absolute; 
+      top: 0;
+      left: 0;
+      height: 96px;
+      width: auto; 
+      object-fit: cover;
+      cursor: pointer;
+      transition: opacity 0.5s ease-in-out;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      border: 2px solid rgba(255,255,255,0.03);
+      opacity: 0;
+      transform: none; 
+    }
+    
+    .thumb-img.active-thumb {
+      opacity: 1;
+    }
+
+    .thumb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 50%;
+      z-index: 10;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .thumb-nav:hover {
+      background: rgba(0,0,0,0.9);
+    }
+    .thumb-prev { left: 0; }
+    .thumb-next { right: 0; }
+
+
+    .portfolio-dots { text-align:center; margin-top:10px }
+    .portfolio-dots .p-dot {
+      display:inline-block; width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.08); margin:0 6px; cursor:pointer;
+    }
+    .portfolio-dots .p-dot.active { background:var(--brand-2) }
+
+    
+    .portfolio-modal {
+      position: fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:120; background: rgba(0,0,0,0.75);
+    }
+    .portfolio-modal.active { display:flex }
+    .portfolio-modal .pm-content {
+      position:relative;
+      max-width:min(92vw,1000px);
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .portfolio-modal img {
+      max-width:100%;
+      max-height:84vh;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      box-sizing: border-box;
+    }
+    .portfolio-modal .pm-close {
+      position:absolute;
+      top:10px;
+      right:10px;
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg, var(--brand), var(--brand-2));
+      color:#fff;
+      font-weight:800;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      z-index: 125;
+    }
+    .portfolio-modal .pm-nav {
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:36px;
+      color:#fff;
+      background:rgba(0,0,0,0.5);
+      border:none;
+      cursor:pointer;
+      padding:8px;
+      user-select:none;
+      z-index: 123;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+    }
+    .portfolio-modal .pm-nav:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    .portfolio-modal .pm-prev { left: 10px; }
+    .portfolio-modal .pm-next { right: 10px; }
+   
+
+
+    .layanan-container {
+      height: auto; 
+      overflow:hidden;
+      position:relative;
+      border-radius:10px;
+      background: rgba(255,255,255,0.02);
+      padding:4px 8px 4px 8px;
+      
+    }
+    .layanan-list {
+      width: calc(100% - 30px);
+      transition: transform 0.5s ease-in-out;
+    }
+    .layanan-list p {
+      margin:0;
+      padding:8px 6px;
+      color:var(--text);
+      box-sizing: border-box;
+    }
+   
+    .layanan-bullet-dots {
+        position: absolute;
+        right: 12px; 
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column; 
+        gap: 8px; 
+        z-index: 5;
+    }
+    .layanan-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .layanan-dot.active {
+        background: var(--brand-2);
+    }
+   
     @media (max-width: 900px){
       .hero{grid-template-columns: 1fr}
       .portfolio{grid-column: 1 / -1}
       .services{grid-column: 1 / -1}
-      .contact{grid-template-columns: 1fr}
+      .contact{grid-column: 1 / -1} 
       .hero-photo{width:210px; height:210px}
+      .thumb-img { height:82px }
+      .portfolio-modal .pm-content { padding: 10px; }
+      .portfolio-modal .pm-prev { left: 5px; }
+      .portfolio-modal .pm-next { right: 5px; }
+      .portfolio-modal .pm-close { top: 5px; right: 5px; }
+
+      
+      .layanan-list {
+        width: calc(100% - 25px); 
+      }
+      .layanan-bullet-dots {
+        right: 5px; 
+      }
     }
   </style>
-  <script>
-    function copyEmail(){
-      const email = document.getElementById('emailText').textContent.trim();
-      navigator.clipboard.writeText(email).then(()=>{
-        const msg = document.getElementById('copied');
-        msg.style.opacity = 1; setTimeout(()=> msg.style.opacity = 0, 1800);
-      });
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const photo = document.getElementById('heroPhoto');
-      const lb = document.getElementById('lightbox');
-      const lbImg = document.getElementById('lightboxImg');
-      const closeBtn = document.getElementById('lbClose');
-
-      function openLB(){ lb.classList.add('active'); }
-      function closeLB(){ lb.classList.remove('active'); }
-
-      photo?.addEventListener('click', openLB);
-      lb?.addEventListener('click', (e)=>{
- 
-        if(e.target === lb || e.target === lbImg){ closeLB(); }
-      });
-      closeBtn?.addEventListener('click', closeLB);
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLB(); });
-    });
-  </script>
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -150,14 +303,14 @@
 <body>
   <header class="container nav" aria-label="Navigasi utama">
     <a class="logo" href="#top" aria-label="Irwans Home">
-      <div class="logo-badge" aria-hidden="true"><span>IR</span></div>
-      <strong>Irwans</strong>
+      <div class="logo-badge" aria-hidden="true"><span>IS</span></div>
+      <strong>IrwanS</strong>
     </a>
     <a class="cta" href="#pesan">Minta Penawaran</a>
   </header>
 
   <main id="top" class="container">
-
+    <!-- HERO -->
     <section class="hero">
       <div class="hero-card">
         <span class="chip">Menerima order — Python & Web</span>
@@ -169,7 +322,7 @@
         </div>
       </div>
       <div class="hero-photo-wrap">
-        <img id="heroPhoto" class="hero-photo" src="https://raw.githubusercontent.com/Milkywan/training-database/main/profile.jpg" alt="Foto profil Irwans" title="Klik untuk melihat ukuran besar"/>
+        <img id="heroPhoto" class="hero-photo" src="profile.jpg" alt="Foto profil Irwans" title="Klik untuk melihat ukuran besar"/>
       </div>
     </section>
 
@@ -182,32 +335,60 @@
       </div>
     </section>
 
-
+   
     <section id="portofolio" class="section">
       <h2>Portofolio Terpilih</h2>
+
       <div class="grid cards" style="margin-top:10px">
         <div class="card portfolio">
-          <div class="item">
-            <div class="thumb" aria-hidden="true">DT</div>
+          
+          <div class="portfolio-thumbs-wrapper">
+            <button class="thumb-nav thumb-prev" aria-label="Thumbnail sebelumnya">&#10094;</button>
+            <div class="portfolio-thumbs" aria-label="Galeri thumbnail portofolio">
+              <img class="thumb-img" data-index="0" src="ss1.jpg" alt="Screenshot 1">
+              <img class="thumb-img" data-index="1" src="ss2.jpg" alt="Screenshot 2">
+              <img class="thumb-img" data-index="2" src="ss3.jpg" alt="Screenshot 3">
+            </div>
+            <button class="thumb-nav thumb-next" aria-label="Thumbnail berikutnya">&#10095;</button>
+          </div>
+
+          
+          <div class="portfolio-dots" aria-hidden="false">
+            <span class="p-dot" data-index="0"></span>
+            <span class="p-dot" data-index="1"></span>
+            <span class="p-dot" data-index="2"></span>
+          </div>
+
+          
+          <div class="item" style="margin-top:12px">
+            <div id="portfolio-logo" class="thumb" aria-hidden="true"></div>
             <div class="meta">
-              <strong>Searching Data Training</strong>
-              <div class="muted">Web tools pencarian & filter data training karyawan. Fitur: pencarian cepat, pagination, ekspor CSV.</div>
-              <small><a href="#" target="_blank" rel="noopener">Demo / Tautan Aplikasi</a> · <a href="#" target="_blank" rel="noopener">Repo / Dokumentasi</a></small>
+              <strong id="portfolio-title"></strong>
+              <div id="portfolio-description" class="muted"></div>
+              <small><a id="portfolio-link" href="#" target="_blank" rel="noopener"></a></small>
             </div>
           </div>
         </div>
+
+       
         <div class="card services">
           <h3>Layanan</h3>
-          <ul class="list">
-            <li><span class="bullet"></span><div><strong>Program Python kustom</strong> — otomasi proses, scraping, ETL data, laporan, CLI/GUI sederhana.</div></li>
-            <li><span class="bullet"></span><div><strong>Web App</strong> — dashboard, API, autentikasi, CRUD, integrasi database.</div></li>
-            <li><span class="bullet"></span><div><strong>Integrasi HR/Operasional</strong> — absensi, payroll helper, validasi data, ekspor/impor.</div></li>
-            <li><span class="bullet"></span><div><strong>Deployment</strong> — server/VPS atau layanan cloud, domain & SSL.</div></li>
-          </ul>
+          <!-- Vertical ticker -->
+          <div class="layanan-container" aria-live="polite" aria-atomic="true">
+            <div class="layanan-list">
+              <p>Program Python kustom — otomasi proses, scraping, ETL data, laporan, CLI/GUI sederhana.</p>
+              <p>Web App — dashboard, API, autentikasi, CRUD, integrasi database.</p>
+              <p>Integrasi HR/Operasional — finger, absensi, payroll helper, validasi data, ekspor/impor.</p>
+              <p>Deployment — server/VPS atau layanan cloud, domain & SSL.</p>
+            </div>
+          </div>
+          
+          <div class="layanan-bullet-dots">
+            
+          </div>
         </div>
       </div>
     </section>
-
 
     <section id="pesan" class="section">
       <h2>Hubungi & Pemesanan</h2>
@@ -237,11 +418,11 @@
       <div class="grid" style="grid-template-columns: 1fr 1fr; gap:18px">
         <div class="card">
           <h3>Berapa lama pengerjaan?</h3>
-          <p class="muted">Tergantung scope. Untuk tool kecil 2–5 hari kerja, aplikasi web dasar 1–3 minggu. Rincian diberikan setelah diskusi awal.</p>
+          <p class="muted">Tergantung scope. Untuk tool kecil 5–7 hari kerja, aplikasi web dasar 1–3 minggu. Rincian diberikan setelah diskusi awal.</p>
         </div>
         <div class="card">
-          <h3>Apakah dapat NDA?</h3>
-          <p class="muted">Bisa. Saya terbiasa menjaga kerahasiaan data & repo privat.</p>
+          <h3>Apakah dapat jaminan NDA?</h3>
+          <p class="muted">Ya. Saya sangat menjaga kerahasiaan data & repo privat.</p>
         </div>
       </div>
     </section>
@@ -249,7 +430,7 @@
 
   <footer class="container footer">
     <div>
-      © 2016-<span id="year"></span> <a href="#top" title="Kembali ke atas">Irwans</a>. Semua hak cipta dilindungi.
+      © 2016-<span id="year"></span> <a href="#top" title="Kembali ke atas">IrwanS</a>. Semua hak cipta dilindungi.
     </div>
     <div class="social">
       <a class="chip-outline linkedin" href="https://www.linkedin.com/in/irwansutrisno?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener" aria-label="LinkedIn Irwans">
@@ -261,22 +442,354 @@
     </div>
   </footer>
 
-
+  
   <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Foto ukuran besar">
     <div class="dialog">
       <button id="lbClose" class="close" aria-label="Tutup">×</button>
-      <img id="lightboxImg" src="https://raw.githubusercontent.com/Milkywan/training-database/main/Picture1.jpg" alt="Foto profil ukuran besar" />
+      <img id="lightboxImg" src="picture1.jpg" alt="Foto profil ukuran besar" />
     </div>
   </div>
 
-  <script>
+  
+  <div id="portfolioModal" class="portfolio-modal" role="dialog" aria-hidden="true" aria-label="Portofolio image viewer">
+    <div class="pm-content">
+      <img id="portfolioModalImg" src="" alt="Gambar portofolio" />
+    </div>
+    <button id="pmClose" class="pm-close" aria-label="Tutup">×</button>
+    <button id="pmPrev" class="pm-nav pm-prev" aria-label="Sebelumnya">&#10094;</button>
+    <button id="pmNext" class="pm-nav pm-next" aria-label="Berikutnya">&#10095;</button>
+  </div>
 
-    document.getElementById('year').textContent = new Date().getFullYear();
+  <script>
+    
+    function copyEmail(){
+      const email = document.getElementById('emailText').textContent.trim();
+      navigator.clipboard.writeText(email).then(()=>{
+        const msg = document.getElementById('copied');
+        msg.style.opacity = 1; setTimeout(()=> msg.style.opacity = 0, 1800);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      
+      const photo = document.getElementById('heroPhoto');
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      const closeBtn = document.getElementById('lbClose');
+
+      function openLB(){ lb.classList.add('active'); }
+      function closeLB(){ lb.classList.remove('active'); }
+
+      photo?.addEventListener('click', openLB);
+      lb?.addEventListener('click', (e)=>{
+        if(e.target === lb || e.target === lbImg){ closeLB(); }
+      });
+      closeBtn?.addEventListener('click', closeLB);
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLB(); });
+
+      
+      const portfolioImages = [
+        'ss1.jpg',
+        'ss2.jpg',
+        'ss3.jpg'
+      ];
+      const pm = document.getElementById('portfolioModal');
+      const pmImg = document.getElementById('portfolioModalImg');
+      const pmClose = document.getElementById('pmClose');
+      const pmPrev = document.getElementById('pmPrev');
+      const pmNext = document.getElementById('pmNext');
+      
+      const pDots = Array.from(document.querySelectorAll('.p-dot'));
+      let currentPortfolioIndex = 0;
+
+      function openPortfolio(index){
+        currentPortfolioIndex = (index + portfolioImages.length) % portfolioImages.length; 
+        pmImg.src = portfolioImages[currentPortfolioIndex];
+        pm.classList.add('active');
+        
+        stopAutoThumbScroll(); 
+      }
+      function closePortfolio(){
+        pm.classList.remove('active');
+        
+        resetAutoThumbScrollTimeout();
+      }
+      function changePortfolio(step){
+        currentPortfolioIndex = (currentPortfolioIndex + step + portfolioImages.length) % portfolioImages.length;
+        pmImg.src = portfolioImages[currentPortfolioIndex];
+      }
+
+      
+      document.querySelectorAll('.thumb-img').forEach(img => {
+        img.addEventListener('click', (e) => {
+          const idx = Number(img.getAttribute('data-index') || 0);
+          openPortfolio(idx);
+        });
+      });
+
+      
+      pDots.forEach((dot, i) => dot.addEventListener('click', ()=> openPortfolio(i)));
+
+
+      
+      pmPrev?.addEventListener('click', ()=> changePortfolio(-1));
+      pmNext?.addEventListener('click', ()=> changePortfolio(1));
+      pmClose?.addEventListener('click', closePortfolio);
+
+      
+      pm?.addEventListener('click', (e) => {
+        
+        if(e.target === pm || e.target === pmImg) {
+          closePortfolio();
+        }
+      });
+
+      
+      document.addEventListener('keydown', (e) => {
+        if(pm.classList.contains('active')) {
+          if(e.key === 'Escape') closePortfolio();
+          if(e.key === 'ArrowLeft') changePortfolio(-1);
+          if(e.key === 'ArrowRight') changePortfolio(1);
+        }
+      });
+
+      
+      let touchStartX = 0;
+      let touchEndX = 0;
+      pmImg?.addEventListener('touchstart', (e)=> {
+        touchStartX = e.changedTouches[0].screenX;
+      }, {passive:true});
+      pmImg?.addEventListener('touchend', (e)=> {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if(Math.abs(diff) > 40) {
+          if(diff < 0) changePortfolio(1); else changePortfolio(-1);
+        }
+      });
+
+     
+      document.querySelectorAll('.thumb-img').forEach((el, idx) => {
+        el.setAttribute('tabindex', '0');
+        el.addEventListener('keydown', (e) => { if(e.key === 'Enter') openPortfolio(idx); });
+      });
+
+
+      const portfolioDisplayData = [
+        {
+          image: 'ss1.jpg',
+          title: 'Searching Data Training',
+          description: 'Web tools pencarian & filter data training karyawan. Fitur: pencarian cepat, pagination, ekspor CSV.',
+          linkText: 'Tautan Web',
+          linkUrl: 'https://datatraining-irwans.web.app/',
+          logoText: 'DT'
+        },
+        {
+          image: 'ss2.jpg',
+          title: 'Mobile Presence App',
+          description: 'Aplikasi absensi pencarian & filter data training karyawan berbasis web dengan tampilan menyesuaikan mobile phone anda.',
+          linkText: '',
+          linkUrl: '#',
+          logoText: 'MB'
+        },
+        {
+          image: 'ss3.jpg',
+          title: 'Program Finger Aplikasi',
+          description: 'Sistem terintegrasi untuk pengelolaan data absensi dari mesin fingerprint, otomatisasi laporan, dan sinkronisasi data.',
+          linkText: 'Pelajari Lebih Lanjut',
+          linkUrl: '#',
+          logoText: 'FP'
+        }
+      ];
+
+      const portfolioThumbsContainer = document.querySelector('.portfolio-thumbs');
+      const thumbPrevBtn = document.querySelector('.thumb-prev');
+      const thumbNextBtn = document.querySelector('.thumb-next');
+      const allThumbnails = Array.from(document.querySelectorAll('.portfolio-thumbs .thumb-img'));
+      const portfolioLogo = document.getElementById('portfolio-logo');
+      const portfolioTitle = document.getElementById('portfolio-title');
+      const portfolioDescription = document.getElementById('portfolio-description');
+      const portfolioLink = document.getElementById('portfolio-link');
+      const thumbDots = Array.from(document.querySelectorAll('.portfolio-dots .p-dot')); 
+
+      let autoThumbInterval;
+      let autoThumbTimeout;
+      let currentThumbIndex = 0; 
+
+      const showThumbnail = (index) => {
+        
+        currentThumbIndex = (index + allThumbnails.length) % allThumbnails.length;
+
+        
+        allThumbnails.forEach((thumb, idx) => {
+          if (idx === currentThumbIndex) {
+            thumb.classList.add('active-thumb');
+          } else {
+            thumb.classList.remove('active-thumb');
+          }
+        });
+
+        
+        const currentData = portfolioDisplayData[currentThumbIndex];
+        if (currentData) {
+          portfolioLogo.textContent = currentData.logoText;
+          portfolioTitle.textContent = currentData.title;
+          portfolioDescription.textContent = currentData.description;
+          portfolioLink.textContent = currentData.linkText;
+          portfolioLink.href = currentData.linkUrl;
+        }
+
+        
+        thumbDots.forEach((dot, idx) => {
+          if (idx === currentThumbIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      };
+
+      const startAutoThumbScroll = () => {
+        if (allThumbnails.length <= 1) return;
+
+        autoThumbInterval = setInterval(() => {
+          showThumbnail(currentThumbIndex + 1);
+        }, 5000); 
+      };
+
+      const stopAutoThumbScroll = () => {
+        clearInterval(autoThumbInterval);
+        clearTimeout(autoThumbTimeout);
+      };
+
+      const resetAutoThumbScrollTimeout = () => {
+        stopAutoThumbScroll();
+        autoThumbTimeout = setTimeout(startAutoThumbScroll, 4000);
+      };
+
+      if (portfolioThumbsContainer && allThumbnails.length > 0) {
+       
+        if (thumbNextBtn) {
+          thumbNextBtn.addEventListener('click', () => {
+            stopAutoThumbScroll();
+            showThumbnail(currentThumbIndex + 1);
+            resetAutoThumbScrollTimeout();
+          });
+        }
+        if (thumbPrevBtn) {
+          thumbPrevBtn.addEventListener('click', () => {
+            stopAutoThumbScroll();
+            showThumbnail(currentThumbIndex - 1);
+            resetAutoThumbScrollTimeout();
+          });
+        }
+
+        
+        showThumbnail(0); 
+        startAutoThumbScroll();
+
+        
+        allThumbnails.forEach(thumb => {
+          thumb.addEventListener('click', () => {
+            stopAutoThumbScroll(); 
+            
+          });
+        });
+
+        
+        thumbDots.forEach((dot, idx) => {
+            dot.addEventListener('click', () => {
+                stopAutoThumbScroll();
+                showThumbnail(idx); 
+                resetAutoThumbScrollTimeout();
+            });
+        });
+      }
+      
+      const layananList = document.querySelector('.layanan-list');
+      const layananContainer = document.querySelector('.layanan-container');
+      const layananItems = Array.from(layananList.querySelectorAll('p'));
+      const layananBulletDotsContainer = document.querySelector('.layanan-bullet-dots');
+      let layananBulletDots = []; 
+
+      if (layananList && layananItems.length > 0 && layananBulletDotsContainer) {
+        let currentLayananIndex = 0;
+        let layananTickerInterval;
+
+        
+        layananItems.forEach((_, idx) => {
+          const dot = document.createElement('span');
+          dot.classList.add('layanan-dot');
+          dot.setAttribute('data-index', idx);
+          layananBulletDotsContainer.appendChild(dot);
+          layananBulletDots.push(dot);
+        });
+
+        const updateLayananTicker = () => {
+          const targetItem = layananItems[currentLayananIndex];
+
+          
+          if (!targetItem) {
+            currentLayananIndex = 0; 
+            
+            layananList.style.transition = 'none';
+            layananList.style.transform = `translateY(0px)`;
+            layananContainer.style.height = `${layananItems[0].offsetHeight + 16}px`; 
+            void layananList.offsetWidth; 
+            layananList.style.transition = 'transform 0.5s ease-in-out'; 
+
+           
+            updateLayananTicker(); 
+            return;
+          }
+
+          
+          let accumulatedHeight = 0;
+          for (let i = 0; i < currentLayananIndex; i++) {
+              accumulatedHeight += layananItems[i].offsetHeight;
+          }
+
+          
+          layananList.style.transform = `translateY(-${accumulatedHeight}px)`;
+          
+          layananContainer.style.height = `${targetItem.offsetHeight + 16}px`;
+
+          
+          layananBulletDots.forEach((dot, idx) => {
+            if (idx === currentLayananIndex) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+
+          currentLayananIndex++; 
+        };
+
+        
+        updateLayananTicker();
+
+        
+        layananTickerInterval = setInterval(updateLayananTicker, 4000);
+
+        
+        layananContainer.addEventListener('mouseenter', () => clearInterval(layananTickerInterval));
+        layananContainer.addEventListener('mouseleave', () => layananTickerInterval = setInterval(updateLayananTicker, 4000));
+        
+        
+        layananBulletDots.forEach((dot, idx) => {
+            dot.addEventListener('click', () => {
+                clearInterval(layananTickerInterval); 
+                currentLayananIndex = idx; 
+                updateLayananTicker(); 
+                layananTickerInterval = setInterval(updateLayananTicker, 4000); 
+            });
+        });
+      }
+      
+    });
   </script>
 </body>
 </html>
-
-
-
-
-
