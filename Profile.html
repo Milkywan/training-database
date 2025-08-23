@@ -15,21 +15,17 @@
   <meta name="theme-color" content="#1f1147" />
   <style>
     :root{
-      /* === WARNA UTAMA (UNGU TUA GRADASI) === */
-      --bg: #0b0a12;            /* latar belakang gelap */
-      --elev: #141126;          /* permukaan kartu */
-      --muted:#a3a3b2;          /* teks sekunder */
-      --text:#ececf2;           /* teks utama */
-      --brand:#6d28d9;          /* ungu tua */
-      --brand-2:#9333ea;        /* ungu */
-      --brand-3:#a855f7;        /* aksen ungu */
-      --ok:#34d399;             /* emerald */
+      --bg: #0b0a12;        
+      --elev: #141126;        
+      --muted:#a3a3b2;        
+      --text:#ececf2;        
+      --brand:#6d28d9;       
+      --brand-2:#9333ea;       
+      --brand-3:#a855f7;      
+      --ok:#34d399;           
       --radius: 18px;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --maxw: 1120px;
-
-      /* === CATATAN: kalau mau balik ke skema biru-cyan cukup ubah tiga variabel brand di atas === */
-      /* contoh: --brand:#22d3ee; --brand-2:#38bdf8; --brand-3:#7dd3fc; */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -82,18 +78,18 @@
     .contact{display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:10px}
     .contact .card a{word-break:break-word}
 
-    /* Foto profil di hero */
+   
     .hero-photo-wrap{display:grid; place-items:center}
     .hero-photo{width:260px; height:260px; border-radius:999px; object-fit:cover; border:3px solid rgba(168,85,247,.5); box-shadow:0 12px 40px rgba(109,40,217,.35); cursor:pointer}
     .hero-photo:hover{transform:translateY(-1px)}
 
-    /* Lightbox modal */
+ 
     .lightbox{position:fixed; inset:0; background:rgba(0,0,0,.6); display:grid; place-items:center; opacity:0; pointer-events:none; transition:.2s ease; z-index:50}
     .lightbox.active{opacity:1; pointer-events:auto}
     .lightbox .dialog{position:relative; max-width:min(92vw, 980px);}
     .lightbox img{max-width:100%; max-height:85vh; border-radius:16px; box-shadow:var(--shadow); cursor:pointer}
     .lightbox button.close{position:absolute; top:-12px; right:-12px; width:40px; height:40px; border:none; border-radius:999px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#fff; font-weight:800; box-shadow:var(--shadow); cursor:pointer}
-    /* Chip outline (untuk LinkedIn) */
+
     .chip-outline{display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.2px; background:transparent; border:1.8px solid currentColor; transition:.18s ease; text-decoration:none}
     .chip-outline .icon{width:18px; height:18px}
     .chip-outline.linkedin{color:#0A66C2}
@@ -121,7 +117,6 @@
       });
     }
 
-    // Lightbox handlers
     document.addEventListener('DOMContentLoaded', () => {
       const photo = document.getElementById('heroPhoto');
       const lb = document.getElementById('lightbox');
@@ -133,7 +128,7 @@
 
       photo?.addEventListener('click', openLB);
       lb?.addEventListener('click', (e)=>{
-        // close when clicking backdrop OR image itself
+ 
         if(e.target === lb || e.target === lbImg){ closeLB(); }
       });
       closeBtn?.addEventListener('click', closeLB);
@@ -162,7 +157,7 @@
   </header>
 
   <main id="top" class="container">
-    <!-- HERO -->
+
     <section class="hero">
       <div class="hero-card">
         <span class="chip">Menerima order — Python & Web</span>
@@ -174,11 +169,10 @@
         </div>
       </div>
       <div class="hero-photo-wrap">
-        <img id="heroPhoto" class="hero-photo" src="images/profile.jpg" alt="Foto profil Irwans" title="Klik untuk melihat ukuran besar"/>
+        <img id="heroPhoto" class="hero-photo" src="/profile.jpg" alt="Foto profil Irwans" title="Klik untuk melihat ukuran besar"/>
       </div>
     </section>
 
-    <!-- TENTANG SAYA -->
     <section id="about" class="section">
       <h2>Tentang Saya</h2>
       <div class="card">
@@ -188,7 +182,7 @@
       </div>
     </section>
 
-    <!-- PORTOFOLIO + LAYANAN -->
+
     <section id="portofolio" class="section">
       <h2>Portofolio Terpilih</h2>
       <div class="grid cards" style="margin-top:10px">
@@ -214,7 +208,7 @@
       </div>
     </section>
 
-    <!-- KONTAK -->
+
     <section id="pesan" class="section">
       <h2>Hubungi & Pemesanan</h2>
       <p class="muted">Ceritakan kebutuhan Anda. Saya akan bantu memetakan scope, timeline realistis, dan estimasi biaya.</p>
@@ -238,7 +232,6 @@
       </div>
     </section>
 
-    <!-- FAQ SINGKAT -->
     <section class="section">
       <h2>FAQ Singkat</h2>
       <div class="grid" style="grid-template-columns: 1fr 1fr; gap:18px">
@@ -256,7 +249,7 @@
 
   <footer class="container footer">
     <div>
-      © <span id="year"></span> <a href="#top" title="Kembali ke atas">Irwans</a>. Semua hak cipta dilindungi.
+      © 2016-<span id="year"></span> <a href="#top" title="Kembali ke atas">Irwans</a>. Semua hak cipta dilindungi.
     </div>
     <div class="social">
       <a class="chip-outline linkedin" href="https://www.linkedin.com/in/irwansutrisno?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener" aria-label="LinkedIn Irwans">
@@ -268,17 +261,18 @@
     </div>
   </footer>
 
-  <!-- LIGHTBOX OVERLAY -->
+
   <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Foto ukuran besar">
     <div class="dialog">
       <button id="lbClose" class="close" aria-label="Tutup">×</button>
-      <img id="lightboxImg" src="images/picture1.jpg" alt="Foto profil ukuran besar" />
+      <img id="lightboxImg" src="/picture1.jpg" alt="Foto profil ukuran besar" />
     </div>
   </div>
 
   <script>
-    // Set dynamic year
+
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
+
