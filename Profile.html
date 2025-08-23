@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Irwans — Python & Web Developer · Automation & Web Solutions</title>
+  <meta name="description" content="Profil Irwans — HR Profesional & Developer. Menerima order pengerjaan program berbasis Python dan Web. Layanan, portofolio, dan kontak pemesanan." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Irwans — Python & Web Developer">
+  <meta property="og:description" content="Menerima order pengerjaan program berbasis Python & Web. HR Profesional yang membangun sistem otomatisasi & aplikasi web.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="">
+  <meta name="theme-color" content="#1f1147" />
+  <style>
+    :root{
+      /* === WARNA UTAMA (UNGU TUA GRADASI) === */
+      --bg: #0b0a12;            /* latar belakang gelap */
+      --elev: #141126;          /* permukaan kartu */
+      --muted:#a3a3b2;          /* teks sekunder */
+      --text:#ececf2;           /* teks utama */
+      --brand:#6d28d9;          /* ungu tua */
+      --brand-2:#9333ea;        /* ungu */
+      --brand-3:#a855f7;        /* aksen ungu */
+      --ok:#34d399;             /* emerald */
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --maxw: 1120px;
+
+      /* === CATATAN: kalau mau balik ke skema biru-cyan cukup ubah tiga variabel brand di atas === */
+      /* contoh: --brand:#22d3ee; --brand-2:#38bdf8; --brand-3:#7dd3fc; */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(60vw 60vw at 80% 10%, rgba(148, 77, 255,.08), transparent 60%),
+        radial-gradient(55vw 55vw at 0% 50%, rgba(109, 40, 217,.08), transparent 60%),
+        var(--bg);
+      line-height:1.6;
+    }
+    a{color:inherit}
+    .container{max-width:var(--maxw); margin:0 auto; padding:24px}
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0}
+    .nav .logo{display:flex; align-items:center; gap:10px; text-decoration:none}
+    .logo-badge{width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); display:grid; place-items:center; box-shadow:var(--shadow)}
+    .logo-badge span{font-weight:800; color:#0b0616}
+    .nav a.cta{padding:10px 14px; border-radius:12px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#f4e9ff; font-weight:700; text-decoration:none; box-shadow:var(--shadow)}
+
+    .hero{display:grid; gap:26px; grid-template-columns: 1.1fr .9fr; align-items:center; padding:36px 0}
+    .hero-card{background:linear-gradient(180deg, rgba(20,17,38,.85), rgba(20,17,38,.6)); border:1px solid rgba(163,163,178,.15); border-radius:calc(var(--radius) + 6px); padding:28px; box-shadow:var(--shadow)}
+    .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.2px; color:#1a0f33; background:linear-gradient(135deg, var(--brand-3), var(--brand-2))}
+    .title{font-size:clamp(28px, 5.2vw, 48px); line-height:1.12; margin:14px 0 12px; font-weight:800}
+    .subtitle{color:var(--muted)}
+    .hero-cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:18px}
+    .btn{display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:14px; border:1px solid rgba(163,163,178,.25); background:#0e0b1a; color:var(--text); text-decoration:none; font-weight:700}
+    .btn.primary{border:none; background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#f9f6ff}
+
+    .grid{display:grid; gap:18px}
+    .grid.cards{grid-template-columns: repeat(12, 1fr)}
+    .card{background:linear-gradient(180deg, rgba(20,17,38,.85), rgba(20,17,38,.6)); border:1px solid rgba(163,163,178,.15); border-radius:var(--radius); padding:20px}
+    .card h3{margin:0 0 8px}
+
+    .section{padding:18px 0 8px}
+    .section h2{font-size:22px; letter-spacing:.3px}
+    .muted{color:var(--muted)}
+
+    .list{display:grid; gap:10px; margin:12px 0 0; padding:0; list-style:none}
+    .list li{display:flex; gap:10px; align-items:flex-start}
+    .bullet{width:8px; height:8px; border-radius:999px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); margin-top:8px}
+
+    .portfolio{grid-column: span 7}
+    .services{grid-column: span 5}
+
+    .portfolio .item{display:flex; gap:14px; align-items:center; padding:12px; border-radius:14px; background:rgba(10,6,23,.5); border:1px solid rgba(163,163,178,.15)}
+    .portfolio .thumb{width:60px; height:60px; border-radius:12px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); display:grid; place-items:center; font-weight:800; color:#1d0b3a}
+    .portfolio .meta small{color:var(--muted)}
+
+    .contact{display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:10px}
+    .contact .card a{word-break:break-word}
+
+    /* Foto profil di hero */
+    .hero-photo-wrap{display:grid; place-items:center}
+    .hero-photo{width:260px; height:260px; border-radius:999px; object-fit:cover; border:3px solid rgba(168,85,247,.5); box-shadow:0 12px 40px rgba(109,40,217,.35); cursor:pointer}
+    .hero-photo:hover{transform:translateY(-1px)}
+
+    /* Lightbox modal */
+    .lightbox{position:fixed; inset:0; background:rgba(0,0,0,.6); display:grid; place-items:center; opacity:0; pointer-events:none; transition:.2s ease; z-index:50}
+    .lightbox.active{opacity:1; pointer-events:auto}
+    .lightbox .dialog{position:relative; max-width:min(92vw, 980px);}
+    .lightbox img{max-width:100%; max-height:85vh; border-radius:16px; box-shadow:var(--shadow); cursor:pointer}
+    .lightbox button.close{position:absolute; top:-12px; right:-12px; width:40px; height:40px; border:none; border-radius:999px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:#fff; font-weight:800; box-shadow:var(--shadow); cursor:pointer}
+    /* Chip outline (untuk LinkedIn) */
+    .chip-outline{display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.2px; background:transparent; border:1.8px solid currentColor; transition:.18s ease; text-decoration:none}
+    .chip-outline .icon{width:18px; height:18px}
+    .chip-outline.linkedin{color:#0A66C2}
+    .chip-outline.linkedin:hover{background:rgba(10,102,194,.12)}
+
+    .footer{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:24px 0; color:var(--muted)}
+    .footer a{color:var(--text); text-decoration:none}
+    .social{display:flex; gap:10px; align-items:center}
+    .icon{width:22px; height:22px; display:inline-block}
+
+    @media (max-width: 900px){
+      .hero{grid-template-columns: 1fr}
+      .portfolio{grid-column: 1 / -1}
+      .services{grid-column: 1 / -1}
+      .contact{grid-template-columns: 1fr}
+      .hero-photo{width:210px; height:210px}
+    }
+  </style>
+  <script>
+    function copyEmail(){
+      const email = document.getElementById('emailText').textContent.trim();
+      navigator.clipboard.writeText(email).then(()=>{
+        const msg = document.getElementById('copied');
+        msg.style.opacity = 1; setTimeout(()=> msg.style.opacity = 0, 1800);
+      });
+    }
+
+    // Lightbox handlers
+    document.addEventListener('DOMContentLoaded', () => {
+      const photo = document.getElementById('heroPhoto');
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      const closeBtn = document.getElementById('lbClose');
+
+      function openLB(){ lb.classList.add('active'); }
+      function closeLB(){ lb.classList.remove('active'); }
+
+      photo?.addEventListener('click', openLB);
+      lb?.addEventListener('click', (e)=>{
+        // close when clicking backdrop OR image itself
+        if(e.target === lb || e.target === lbImg){ closeLB(); }
+      });
+      closeBtn?.addEventListener('click', closeLB);
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLB(); });
+    });
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"Irwans",
+    "jobTitle":"Python & Web Developer",
+    "description":"HR Profesional & Developer. Menerima order program berbasis Python dan Web.",
+    "url":"",
+    "sameAs":["https://www.linkedin.com/in/irwansutrisno?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"]
+  }
+  </script>
+</head>
+<body>
+  <header class="container nav" aria-label="Navigasi utama">
+    <a class="logo" href="#top" aria-label="Irwans Home">
+      <div class="logo-badge" aria-hidden="true"><span>IR</span></div>
+      <strong>Irwans</strong>
+    </a>
+    <a class="cta" href="#pesan">Minta Penawaran</a>
+  </header>
+
+  <main id="top" class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-card">
+        <span class="chip">Menerima order — Python & Web</span>
+        <h1 class="title">Python & Web Developer — <em>Automation & Web Solutions</em></h1>
+        <p class="subtitle">HR Profesional & Developer. Saya membangun solusi berbasis <strong>Python</strong> (otomasi, data processing, desktop/CLI) dan <strong>Website</strong> (frontend–backend) untuk kebutuhan bisnis, operasional HR, hingga proyek personal.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#pesan">Diskusikan Proyek</a>
+          <a class="btn" href="#portofolio">Lihat Portofolio</a>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img id="heroPhoto" class="hero-photo" src="images/profile.jpg" alt="Foto profil Irwans" title="Klik untuk melihat ukuran besar"/>
+      </div>
+    </section>
+
+    <!-- TENTANG SAYA -->
+    <section id="about" class="section">
+      <h2>Tentang Saya</h2>
+      <div class="card">
+        <p>Saya adalah seorang <strong>HR Profesional</strong> yang berpengalaman dalam mengelola dan mengembangkan sistem SDM. Selain itu, saya memiliki keahlian di bidang <strong>programming</strong> terutama <strong>Python</strong> dan <strong>Web Development</strong>, yang saya gunakan untuk membangun sistem otomatisasi, aplikasi, dan website sesuai kebutuhan bisnis maupun personal.</p>
+        <p>Perpaduan pengalaman di bidang <strong>Human Resources</strong> dan kemampuan teknis dalam pengembangan program membuat saya mampu menghadirkan solusi yang tidak hanya fungsional, tetapi juga relevan dengan kebutuhan organisasi dan pengguna.</p>
+        <p>Untuk urusan <strong>Microsoft Office</strong>, tidak perlu ditanyakan lagi — saya sudah sangat menguasainya.</p>
+      </div>
+    </section>
+
+    <!-- PORTOFOLIO + LAYANAN -->
+    <section id="portofolio" class="section">
+      <h2>Portofolio Terpilih</h2>
+      <div class="grid cards" style="margin-top:10px">
+        <div class="card portfolio">
+          <div class="item">
+            <div class="thumb" aria-hidden="true">DT</div>
+            <div class="meta">
+              <strong>Searching Data Training</strong>
+              <div class="muted">Web tools pencarian & filter data training karyawan. Fitur: pencarian cepat, pagination, ekspor CSV.</div>
+              <small><a href="#" target="_blank" rel="noopener">Demo / Tautan Aplikasi</a> · <a href="#" target="_blank" rel="noopener">Repo / Dokumentasi</a></small>
+            </div>
+          </div>
+        </div>
+        <div class="card services">
+          <h3>Layanan</h3>
+          <ul class="list">
+            <li><span class="bullet"></span><div><strong>Program Python kustom</strong> — otomasi proses, scraping, ETL data, laporan, CLI/GUI sederhana.</div></li>
+            <li><span class="bullet"></span><div><strong>Web App</strong> — dashboard, API, autentikasi, CRUD, integrasi database.</div></li>
+            <li><span class="bullet"></span><div><strong>Integrasi HR/Operasional</strong> — absensi, payroll helper, validasi data, ekspor/impor.</div></li>
+            <li><span class="bullet"></span><div><strong>Deployment</strong> — server/VPS atau layanan cloud, domain & SSL.</div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- KONTAK -->
+    <section id="pesan" class="section">
+      <h2>Hubungi & Pemesanan</h2>
+      <p class="muted">Ceritakan kebutuhan Anda. Saya akan bantu memetakan scope, timeline realistis, dan estimasi biaya.</p>
+      <div class="contact">
+        <div class="card">
+          <h3>WhatsApp</h3>
+          <p>
+            <a class="btn primary" href="https://wa.me/628125331585?text=Halo%20Irwans%2C%20saya%20mau%20order%20program%20berbasis%20Python%20%2F%20Web." target="_blank" rel="noopener">Chat via WhatsApp</a>
+          </p>
+          <small class="muted">Nomor: 0812-533-1585</small>
+        </div>
+        <div class="card">
+          <h3>Email</h3>
+          <p id="emailText">pangeran.irwan@gmail.com</p>
+          <div class="hero-cta">
+            <button class="btn" onclick="copyEmail()">Copy Email</button>
+            <a class="btn" href="mailto:pangeran.irwan@gmail.com?subject=Order%20Program%20Python%20%26%20Web&body=Halo%20Irwans%2C%20saya%20ingin%20diskusi%20proyek%20berikut%3A">Kirim Email</a>
+          </div>
+          <small id="copied" style="opacity:0; transition:.3s; display:inline-block; margin-top:8px;" aria-live="polite">Email disalin ✔</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SINGKAT -->
+    <section class="section">
+      <h2>FAQ Singkat</h2>
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap:18px">
+        <div class="card">
+          <h3>Berapa lama pengerjaan?</h3>
+          <p class="muted">Tergantung scope. Untuk tool kecil 2–5 hari kerja, aplikasi web dasar 1–3 minggu. Rincian diberikan setelah diskusi awal.</p>
+        </div>
+        <div class="card">
+          <h3>Apakah dapat NDA?</h3>
+          <p class="muted">Bisa. Saya terbiasa menjaga kerahasiaan data & repo privat.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <div>
+      © <span id="year"></span> <a href="#top" title="Kembali ke atas">Irwans</a>. Semua hak cipta dilindungi.
+    </div>
+    <div class="social">
+      <a class="chip-outline linkedin" href="https://www.linkedin.com/in/irwansutrisno?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener" aria-label="LinkedIn Irwans">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8.98h4.99V24H0V8.98zM8.99 8.98H14v2.05h.07c.7-1.33 2.4-2.73 4.94-2.73C23.54 8.3 24 12.02 24 16.56V24h-5v-6.6c0-1.57-.03-3.6-2.2-3.6-2.2 0-2.53 1.72-2.53 3.49V24H9v-15h-.01z" fill="currentColor"/>
+        </svg>
+        <span>LinkedIn</span>
+      </a>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX OVERLAY -->
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Foto ukuran besar">
+    <div class="dialog">
+      <button id="lbClose" class="close" aria-label="Tutup">×</button>
+      <img id="lightboxImg" src="images/picture1.jpg" alt="Foto profil ukuran besar" />
+    </div>
+  </div>
+
+  <script>
+    // Set dynamic year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
